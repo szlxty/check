@@ -1,6 +1,6 @@
 package me.szlx.check.checker;
 
-class CheckContext {
+public class CheckContext {
     private static ThreadLocal holder = new ThreadLocal();
 
     @SuppressWarnings("unchecked")
@@ -9,11 +9,11 @@ class CheckContext {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> void set(T value) {
+    static <T> void set(T value) {
         holder.set(value);
     }
 
-    public static void remove() {
+    static void remove() {
         holder.remove();
     }
 }

@@ -39,7 +39,7 @@ public interface Scene {
      */
     default <T> Checker<T> checker(String constraintCodeOrBrief, Predicate<T> predicate) {
         if (constraintCodeOrBrief == null) {
-            throw new IllegalArgumentException("检测约束不能为null");
+            throw new IllegalArgumentException("检测约束代码不能为null");
         }
         String constraintCode = decorate(constraintCodeOrBrief);
         Constraint constraint = ConstraintSystem.get().getConstraintContainer().find(constraintCode);
@@ -47,6 +47,21 @@ public interface Scene {
             constraint = ConstraintFactory.create(Constraint.UNCODED.code(), constraintCode);
         }
         return Checker.create(constraint, predicate);
+    }
+
+    /**
+     * 根据指定的约束信息与断言创建新的checker。
+     *
+     * @param constraint 约束信息，约束的代码或描述。
+     * @param predicate             检测断言。
+     * @param <T>                   待检测对象的类型。
+     * @return 新的检测器。
+     */
+    default <T> Checker<T> checker(Constraint constraint, Predicate<T> predicate) {
+        if (constraint == null) {
+            throw new IllegalArgumentException("检测约束不能为null");
+        }
+        return checker(constraint.code(), predicate);
     }
 
     /**

@@ -6,8 +6,8 @@ import me.szlx.check.constraint.system.ConstraintSystem;
 import java.util.function.Predicate;
 
 class SimpleChecker<T> implements Checker<T> {
-    private Constraint constraint;
-    private Predicate<T> predicate;
+    private final Constraint constraint;
+    private final Predicate<T> predicate;
 
     SimpleChecker(Constraint constraint, Predicate<T> predicate) {
         if (constraint == null) {
@@ -21,20 +21,24 @@ class SimpleChecker<T> implements Checker<T> {
     }
 
     @Override
-    public void check(T target) {
-        if (!predicate.test(target)) {
-            ConstraintSystem.get().getInvalidationHandler().handle(constraint);
-        }
-    }
-
-    @Override
-    public void check(T target, Object... context) {
+    public T check(T target, Object... context) {
         Object oldContext = CheckContext.get();
-        CheckContext.set(context);
+        if (isSingleValue(context)) {
+            CheckContext.set(context[0]);
+        } else {
+            CheckContext.set(context);
+        }
         try {
-            check(target);
+            if (!predicate.test(target)) {
+                ConstraintSystem.get().getInvalidationHandler().handle(constraint);
+            }
+            return target;
         } finally {
             CheckContext.set(oldContext);
         }
+    }
+
+    private boolean isSingleValue(Object[] context) {
+        return context != null && context.length == 1;
     }
 }
