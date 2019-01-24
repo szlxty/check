@@ -35,8 +35,16 @@ public interface Constraint extends Serializable {
         return new Constraint[]{UNCODED, RUNTIME};
     }
 
-    static Constraint of(String constraintCodeOrBrief) {
-        Constraint managedConstraint = ConstraintSystem.get().getConstraintContainer().find(constraintCodeOrBrief);
-        return managedConstraint != null ? managedConstraint : ConstraintFactory.create(Constraint.UNCODED.code(), constraintCodeOrBrief);
+    /**
+     * 在约束系统中查找以参数为<code>code</code>的约束，如果找到，则返回找到的约束，否则创建一个临时约束。
+     * 临时约束以{@link #UNCODED}的<code>code</code>为<code>code</code>，参数指定值为<code>brief</code>。<p>
+     * 临时约束不会自动添加到约束系统。</p>
+     *
+     * @param codeOrBrief 约束代码或描述。
+     * @return 约束系统中code匹配参数的约束，或新建的临时约束。
+     */
+    static Constraint getOrCreate(String codeOrBrief) {
+        Constraint managedConstraint = ConstraintSystem.get().getConstraintContainer().find(codeOrBrief);
+        return managedConstraint != null ? managedConstraint : ConstraintFactory.create(Constraint.UNCODED.code(), codeOrBrief);
     }
 }

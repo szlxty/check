@@ -18,7 +18,7 @@ public class CheckException extends RuntimeException {
     }
 
     public CheckException(String codeOrBrief) {
-        this(Constraint.of(Objects.requireNonNull(codeOrBrief, "异常信息不能为null")));
+        this(Constraint.getOrCreate(Objects.requireNonNull(codeOrBrief, "异常信息不能为null")));
     }
 
     public CheckException(Supplier<String> codeOrBriefSupplier, Throwable cause) {
@@ -26,7 +26,7 @@ public class CheckException extends RuntimeException {
     }
 
     public CheckException(String codeOrBrief, Throwable cause) {
-        this(Constraint.of(Objects.requireNonNull(codeOrBrief, "异常信息不能为null")), cause);
+        this(Constraint.getOrCreate(Objects.requireNonNull(codeOrBrief, "异常信息不能为null")), cause);
     }
 
     /**
